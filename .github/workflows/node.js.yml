@@ -24,40 +24,12 @@ jobs:
       with:
         node-version: 18.x
         cache: 'npm'
-    - run: npm ciname: Packaging
-
-name: Packaging
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch: 
-  
-jobs:
-  build:
-    name: "Build and Test"
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js 16.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16.x
-        cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
-    - name: 'Report Coverage'
-      uses:  davelosert/vitest-coverage-report-action@v2
-      if: always()
-    
-  package-and-publish:
-    needs: 
-      - build
+    - run: npm run test
+    - uses: davelosert/vitest-coverage-report-action@v2
+
 
     name: 🐳 Package & Publish
     runs-on: ubuntu-latest
@@ -96,11 +68,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-    - run: npm run build --if-present
-    - run: npm test
-    
-  
-    
-    
-    
-  
